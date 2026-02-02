@@ -1,65 +1,83 @@
 const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const result = document.getElementById("result");
+const noBtn  = document.getElementById("noBtn");
 const buttons = document.getElementById("buttons");
 const question = document.getElementById("question");
 const hint = document.getElementById("hint");
+const result = document.getElementById("result");
 
-let yesScale = 1;
-let noMoves = 0;
+let yesStep = 0;         // 0 = normal, 1 = "bist du sicher", 2 = "sicher sicher"
+let noJumpsLeft = 6;     // "paarmal" -> Anzahl Sprünge (kannst du anpassen)
 
-// Hilfsfunktion: zufällige Position innerhalb der Button-Zone
 function moveNoButton() {
   const area = buttons.getBoundingClientRect();
   const btn = noBtn.getBoundingClientRect();
+  const padding = 8;
 
-  const padding = 10;
-  const maxX = area.width - btn.width - padding;
-  const maxY = area.height - btn.height - padding;
+  const maxX = Math.max(padding, area.width - btn.width - padding);
+  const maxY = Math.max(padding, area.height - btn.height - padding);
 
-  // Zufallsposition, aber im Bereich
-  const x = Math.max(padding, Math.random() * maxX);
-  const y = Math.max(padding, Math.random() * maxY);
+  const x = padding + Math.random() * (maxX - padding);
+  const y = padding + Math.random() * (maxY - padding);
 
   noBtn.style.left = `${x}px`;
-  noBtn.style.top = `${y}px`;
+  noBtn.style.top  = `${y}px`;
 }
 
-function showResult() {
+function showGif() {
   buttons.style.display = "none";
   hint.style.display = "none";
-  question.textContent = "Nirali, willst du mein Valentine sein?";
   result.classList.remove("hidden");
 }
 
-// "Nein" weicht aus (Desktop: hover, Mobile: touch)
+function resetNoIfDone() {
+  if (noJumpsLeft <= 0) {
+    // danach bleibt "Nein" stehen, damit es nicht unendlich nervt
+    noBtn.style.position = "static";
+    noBtn.style.transform = "none";
+    buttons.style.gap = "14px";
+  }
+}
+
+// Nein springt nur ein paar Mal
 noBtn.addEventListener("mouseenter", () => {
-  noMoves++;
-  moveNoButton();
+  if (noJumpsLeft > 0) {
+    noJumpsLeft--;
+    moveNoButton();
+    resetNoIfDone();
+  }
 });
 
 noBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  noMoves++;
-  moveNoButton();
+  if (noJumpsLeft > 0) {
+    noJumpsLeft--;
+    moveNoButton();
+    resetNoIfDone();
+  }
 });
 
-// Bonus: mit jedem “Nein”-Versuch wird “Ja” größer
-function growYes() {
-  yesScale = Math.min(2.2, yesScale + 0.18);
-  yesBtn.style.transform = `scale(${yesScale})`;
-}
-
-noBtn.addEventListener("mouseenter", growYes);
-noBtn.addEventListener("click", growYes);
-
+// Ja: Bestätigungs-Flow
 yesBtn.addEventListener("click", () => {
-  showResult();
+  if (yesStep === 0) {
+    yesStep = 1;
+    question.textContent = "bist du sicher?";
+    yesBtn.textContent = "Ja";
+    noBtn.textContent = "Nein";
+    return;
+  }
+
+  if (yesStep === 1) {
+    yesStep = 2;
+    question.textContent = "sicher sicher?";
+    return;
+  }
+
+  // yesStep === 2
+  showGif();
 });
 
-// Startposition für "Nein"
+// Startposition für Nein (damit absolute Position sauber ist)
 window.addEventListener("load", () => {
-  // Absolute Position braucht top/left initial
   noBtn.style.top = "18px";
   noBtn.style.left = "50%";
 });
