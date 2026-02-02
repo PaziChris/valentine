@@ -1,13 +1,16 @@
 :root{
-  --bg1:#f7c6d7;
-  --bg2:#e7b7ff;
-  --card:#ffffffcc;
-  --text:#1b1b1b;
-  --yes:#ff3d7f;
-  --no:#e9e9ef;
+  --bg1:#3b0a0f;         /* dunkles rot */
+  --bg2:#7a0f1a;         /* valentines rot */
+  --card:#ffffffea;
+  --text:#141414;
+
+  --yes:#d90429;         /* kräftiges rot */
+  --yes2:#ef233c;        /* hover/akzent */
+  --no:#f1f1f5;
 }
 
 *{ box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+
 body{
   margin:0;
   min-height:100vh;
@@ -17,15 +20,14 @@ body{
   color:var(--text);
 }
 
-.wrap{ padding:24px; width:min(680px, 92vw); }
+.wrap{ padding:24px; width:min(720px, 92vw); }
 
 .card{
   background:var(--card);
-  backdrop-filter: blur(8px);
-  border:1px solid #ffffff66;
+  border:1px solid #ffffffaa;
   border-radius:24px;
   padding:28px 22px;
-  box-shadow: 0 14px 50px #0000001a;
+  box-shadow: 0 18px 60px #00000045;
   text-align:center;
   position:relative;
   overflow:hidden;
@@ -42,16 +44,16 @@ h1{ margin:10px 0 8px; font-size: clamp(22px, 4vw, 34px); }
   align-items:center;
   position:relative;
   padding:14px 0 8px;
-  min-height:84px;
+  min-height:96px;
 }
 
 .btn{
   border:0;
-  padding:14px 22px;
+  padding:14px 24px;
   border-radius:999px;
-  font-weight:700;
+  font-weight:800;
   cursor:pointer;
-  transition: transform .12s ease, filter .12s ease;
+  transition: transform .12s ease, filter .12s ease, background .12s ease;
   user-select:none;
 }
 
@@ -60,30 +62,30 @@ h1{ margin:10px 0 8px; font-size: clamp(22px, 4vw, 34px); }
 .btn-yes{
   background:var(--yes);
   color:white;
-  box-shadow: 0 10px 24px #ff3d7f44;
+  box-shadow: 0 12px 28px #d9042950;
 }
+
+.btn-yes:hover{ background:var(--yes2); }
 
 .btn-no{
   background:var(--no);
   color:#111;
-  position:absolute; /* wichtig fürs “Ausweichen” */
+  position:absolute;
   left:50%;
+  top:18px;
   transform: translateX(90px);
 }
 
 .result{
-  margin-top:18px;
+  margin-top:16px;
   display:grid;
   place-items:center;
-  gap:10px;
 }
 
 .result img{
-  width:min(380px, 80%);
+  width:min(420px, 85%);
   border-radius:18px;
-  border:1px solid #ffffffaa;
+  border:1px solid #ffffffcc;
 }
-
-.small{ opacity:.7; font-size:14px; }
 
 .hidden{ display:none; }
